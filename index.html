@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Civil 3D Generator</title>
+</head>
+<body style="font-family:sans-serif; padding:30px;">
+  <h2>Enter a Civil Prompt (e.g., bridge, flyover):</h2>
+  <input type="text" id="prompt" placeholder="e.g. dam" />
+  <button onclick="generate()">Generate</button>
+  <p id="status"></p>
+
+  <script>
+    async function generate() {
+      const prompt = document.getElementById("prompt").value;
+      document.getElementById("status").innerText = "⏳ Generating...";
+
+      const res = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        window.open(data.model_url, "_blank");
+        document.getElementById("status").innerText = "";
+      } else {
+        document.getElementById("status").innerText = "❌ " + data.error;
+      }
+    }
+  </script>
+</body>
+</html>
